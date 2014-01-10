@@ -14,6 +14,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+/*
+* Comentário Teste
+*/
+
 @Entity
 @Table(name = "TB_CIDADE")
 public class Cidade implements Serializable {

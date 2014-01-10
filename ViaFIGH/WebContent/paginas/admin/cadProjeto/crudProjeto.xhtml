@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+		
+<h:head>
+	<title><h:outputText value="#{msgs.tituloCadastroProjeto}"></h:outputText></title>
+	<h:outputScript library="js" name="projeto.js"/>
+</h:head>
+
+<ui:composition template="/template/template.xhtml">
+
+	<ui:define name="conteudo">
+		<!-- Adiciona Menu superior na página -->
+		<ui:include src="/paginas/menu.xhtml" />		
+		<h:form id="formPrincipal">
+			<p:growl id="growl" showDetail="true" life="2000" autoUpdate="true" />
+			<p:dataTable id="projetos" var="projeto"
+				value="#{projetoController.projetos}"
+				rowsPerPageTemplate="15,30,50,100" paginator="true"
+				selectionMode="single" rowKey="#{projeto.id}" paginatorPosition="bottom"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				editable="true" scrollable="false" resizableColumns="true"
+				styleClass="table" rows="15">
+
+				<p:column headerText="#{msgs.lbProjetoNumero}">
+					<h:outputText value="#{projeto.numeroProjeto}" style="float:left"/>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbProjetoDescricao}">
+					<h:outputText value="#{projeto.descricao}" style="float: left"/>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbProjetoDataInicio}" width="85">
+					<h:outputText value="#{projeto.dataInicio}" converter="javax.faces.DateTime"/>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbProjetoRespEmbratel}" width="250">
+					<h:outputText value="#{projeto.responsavel}" style="float:left"/>
+				</p:column>
+				
+				<p:column headerText="#{msgs.lbProjetoEditar}" width="5%" >
+					<p:commandButton icon="ui-icon-pencil" style="height: 7px; width: 7px"
+						action="#{projetoController.separarUsuarios}"
+						update=":formPrincipal:projetos, :formPrincipal:growl, :FormCadProjeto"
+						 oncomplete="PF('cadProjeto').show()">
+						<f:setPropertyActionListener target="#{projetoController.projetoSelected}" value="#{projeto}" />
+						<f:setPropertyActionListener target="#{projetoController.edicao}" value="#{true}" />
+						<f:setPropertyActionListener target="#{projetoController.novoCadastro}" value="#{false}" />							
+					</p:commandButton>
+				</p:column>				
+				
+				<p:column headerText="#{msgs.lbProjetoExcluir}" width="5%" >
+					<p:commandButton icon="ui-icon-trash" style="height: 7px; width: 7px"
+						onclick="PF('confirmarExclusao').show();">
+						<f:setPropertyActionListener target="#{projetoController.projetoSelected}" value="#{projeto}" />							
+					</p:commandButton>
+				</p:column>				
+				
+			</p:dataTable>
+		</h:form>
+		
+		<p:confirmDialog widgetVar="confirmarInicioNovoCadastro" resizable="false"
+			closeOnEscape="true" showEffect="fade" hideEffect="fade" appendToBody="true"
+			header="Cadastrar Novo Projeto" message="Deseja cadastrar um novo projeto ?">
+			
+			<h:form id="IniciaCadastroNovo">
+				<p:commandButton id="confirm" value="Sim, desejo"
+					oncomplete="addAnotherFornecedor();"/>
+				<p:commandButton id="decline" value="Não"
+					oncomplete="PF('confirmarInicioNovoCadastro').hide();" />					
+			</h:form>
+		</p:confirmDialog>		
+		
+		<p:confirmDialog widgetVar="confirmarExclusao" rezizable="false"
+			closeOnEscape="true" showEffect="fade" hideEffect="fade" appendToBody="true"
+			header="Excluir projeto" message="Deseja realmente excluir esse projeto ?">
+			
+			<h:form>
+				<p:commandButton value="Sim, desejo"
+					actionListener="#{projetoController.excluir}"
+					oncomplete="PF('confirmarExclusao').hide()"
+					update=":formPrincipal:projetos">
+				</p:commandButton>
+				<p:commandButton value="Não"
+					oncomplete="PF('confirmarExclusao').hide()"/>
+			</h:form>
+			
+		</p:confirmDialog>
+		
+		<h:form id="FormCadProjeto"	style="position: absolute; left:30%; top:25%;">
+			<p:dialog widgetVar="cadProjeto" resizable="false"
+				closeOnEscape="true" showEffect="fade" hideEffect="fade"
+				header="Preencha o formulário abaixo para cadastrar um novo projeto no sistema">
+				<p:growl id="messagesFormCadastrar" showDetail="true" />
+				<p:panel id="panelCadProjeto">
+					<h:panelGrid id="gridCadProjeto" columns="2" cellpadding="5" rendered="#{projetoController.edicao==false}">
+						<h:outputLabel value="#{msgs.lbProjetoNumero}"/>
+						<p:inputText value="#{projetoController.projeto.numeroProjeto}" 
+							style="float: left" required="true" requiredMessage="#{msgs.msgsProjetoNumero}"/>
+						
+						<h:outputLabel value="#{msgs.lbProjetoDescricao}"/>
+						<p:inputTextarea value="#{projetoController.projeto.descricao}" 
+							style="width: 300px; height: 30px; float: left"
+							required="true" requiredMessage="#{msgs.msgsProjetoDescricao}"/>
+
+						<h:outputLabel value="#{msgs.lbProjetoDataInicio}"/>
+						<p:calendar value="#{projetoController.projeto.dataInicio}" 
+							showOn="button" locale="pt_BR" maxlength="10"
+							pattern="dd/MM/yyyy" style="float: left" onkeypress="mascara(this, data)"
+							mindate="01/01/1970" maxdate="31/12/2099"
+							required="true" requiredMessage="#{msgs.msgsProjetoDataInicio}" />
+							
+						<h:outputLabel value="#{msgs.lbProjetoRespEmbratel}"/>
+						<p:inputText value="#{projetoController.projeto.responsavel}" style="float: left; width: 300px"
+							required="true" requiredMessage="#{msgs.msgsProjetoResponsavel}" />												
+					</h:panelGrid>
+					
+					<h:panelGrid id="gridEdicaoProjeto" columns="2" cellpadding="5" rendered="#{projetoController.edicao==true}">
+						<h:outputLabel value="#{msgs.lbProjetoNumero}"/>
+						<p:inputText value="#{projetoController.projetoSelected.numeroProjeto}" 
+							style="float: left" required="true" requiredMessage="#{msgs.msgsProjetoNumero}"/>
+						
+						<h:outputLabel value="#{msgs.lbProjetoDescricao}"/>
+						<p:inputTextarea value="#{projetoController.projetoSelected.descricao}" 
+							style="width: 300px; height: 30px; float: left"
+							required="true" requiredMessage="#{msgs.msgsProjetoDescricao}"/>
+
+						<h:outputLabel value="#{msgs.lbProjetoDataInicio}"/>
+						<p:calendar value="#{projetoController.projetoSelected.dataInicio}" 
+							showOn="button" locale="pt_BR" maxlength="10"
+							pattern="dd/MM/yyyy" style="float: left" onkeypress="mascara(this, data)"
+							mindate="01/01/1970" maxdate="31/12/2099"
+							required="true" requiredMessage="#{msgs.msgsProjetoDataInicio}" />
+							
+						<h:outputLabel value="#{msgs.lbProjetoRespEmbratel}"/>
+						<p:inputText value="#{projetoController.projetoSelected.responsavel}" style="float: left; width: 300px"
+							required="true" requiredMessage="#{msgs.msgsProjetoResponsavel}" />												
+					</h:panelGrid>
+					
+					<h:panelGrid columns="4" cellpadding="5">
+						<p:commandButton id="btnSalvar" value="#{msgs.btnProjetoSalvar}" icon="ui-icon-disk"
+							actionListener="#{projetoController.salvar}" 
+							update="messagesFormCadastrar, :formPrincipal:projetos, FormCadProjeto, :formAssForn, :formAssCliente" 
+							oncomplete="if(args.validationFailed==true) {PF('cadProjeto').show()}"	/>
+						<p:commandButton value="#{msgs.btnProjetoAssForn}"
+							actionListener="#{projetoController.atualizarListaUsuariosFornecedor}"
+							oncomplete="if(args.validationFailed==true){PF('cadProjeto').show()}else{PF('assForn').show()}"
+							update=":formAssForn"/>
+						<p:commandButton value="#{msgs.btnProjetoEmailCliente}" 
+							actionListener="#{projetoController.atualizarListaUsuariosCliente}"
+							oncomplete="if(args.validationFailed==true){PF('cadProjeto').show()}else{PF('assCliente').show()}"
+							update=":formAssCliente"/>
+						<p:commandButton id="btnLimpar" update=":FormCadProjeto:gridCadProjeto"
+							value="#{msgs.btnProjetoLimpar}" icon="ui-icon-refresh" process="@this"
+							actionListener="#{projetoController.limparBean}">
+							<p:resetInput target=":FormCadProjeto:gridCadProjeto" />
+						</p:commandButton>															
+					</h:panelGrid>					
+					
+				</p:panel>
+			</p:dialog>
+		</h:form>
+		
+		<h:form id="formPesquisa">
+			<p:dialog widgetVar="pesquisaProjeto"
+				resizable="false" closeOnEscape="true" 
+				showEffect="fade" hideEffect="fade">
+				
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel value="#{msgs.lbProjetoNumero}"/>
+					<h:inputText value="#{projetoController.projeto.numeroProjeto}"/>
+					
+					<p:commandButton value="#{msgs.lbProjetoPesquisar}" 
+						actionListener="#{projetoController.pesquisar}"
+						update=":formPrincipal:projetos, formPesquisa" icon="ui-icon-search"/>
+				</h:panelGrid>
+				
+			</p:dialog>
+		</h:form>
+		
+		<p:dialog widgetVar="assForn" appendToBody="true" closable="false"
+			modal="true" header="#{msgs.msgsProjetoAssForn}" width="700px" height="300px"
+			resizable="false" showEffect="fade" hideEffect="fade" 
+			>
+			
+			<h:form id="formAssForn">
+				<p:panel>
+					<p:dataTable rendered="#{projetoController.edicao==false}"
+						value="#{projetoController.usuariosForn}"
+						scrollable="true" resizableColumns="true" styleClass="table"
+						selection="#{projetoController.usuariosSelectedsForn}"
+						style="width:650px" var="usuario" rowKey="#{usuario.id}"
+						scrollHeight="200">
+						
+						<p:column selectionMode="multiple" width="15"/>
+						
+						<p:column headerText="#{msgs.lbProjetoNomeUsuario}">
+							#{usuario.nome}
+						</p:column>
+						
+						<p:column headerText="#{msgs.lbProjetoFornecedor}">
+							#{usuario.fornecedor.nome}
+						</p:column>
+						
+					</p:dataTable>
+
+					<p:dataTable rendered="#{projetoController.edicao==true}"
+						value="#{projetoController.usuariosForn}"
+						scrollable="true" resizableColumns="true" styleClass="table"
+						selection="#{projetoController.usuariosFornEdit}"
+						style="width:650px" var="usuario" rowKey="#{usuario.id}"
+						scrollHeight="200">
+						
+						<p:column selectionMode="multiple" width="15"/>
+						
+						<p:column headerText="#{msgs.lbProjetoNomeUsuario}">
+							#{usuario.nome}
+						</p:column>
+						
+						<p:column headerText="#{msgs.lbProjetoFornecedor}">
+							#{usuario.fornecedor.nome}
+						</p:column>
+						
+					</p:dataTable>
+					
+				</p:panel>
+
+				<h:panelGrid columns="2" style="position: absolute; bottom: 0;">
+					<p:commandButton value="#{msgs.btnUsuarioAssociar}"
+						oncomplete="PF('assForn').hide()"/>
+					<p:commandButton value="#{msgs.btnProjetoCancelar}" oncomplete="PF('assForn').hide()"
+						actionListener="#{projetoController.limparAssociacaoForn}" update="formAssForn">
+					</p:commandButton>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		
+		<!-- Associação de clientes Claro TV ao projeto -->
+		<p:dialog widgetVar="assCliente" appendToBody="true" closable="false"
+			modal="true" header="#{msgs.msgsProjetoAssCliente}" width="700px" height="350px"
+			resizable="false" showEffect="fade" hideEffect="fade">
+			<h:form id="formAssCliente">
+				<h:outputLabel value="#{msgs.msgsProjetoClientes}:"/>
+				<p:separator />
+				
+				<p:selectManyCheckbox value="#{projetoController.usuariosSelectedsCliente}"
+					rendered="#{projetoController.edicao==false}">
+					<f:selectItems value="#{projetoController.usuariosCliente}"
+						var="cliente" itemLabel="#{cliente.nome}" itemValue="#{cliente.id}">
+					</f:selectItems>
+				</p:selectManyCheckbox>
+				
+				<p:selectManyCheckbox value="#{projetoController.usuariosClienteEdit}"
+					rendered="#{projetoController.edicao==true}">
+					<f:selectItems value="#{projetoController.usuariosCliente}"
+						var="cliente" itemLabel="#{cliente.nome}" itemValue="#{cliente}">
+					</f:selectItems>
+				</p:selectManyCheckbox>
+									
+				<h:panelGrid columns="2" style="position:absolute;bottom:0;">
+					<p:commandButton value="#{msgs.btnUsuarioAssociar}"
+						oncomplete="PF('assCliente').hide()"/>
+					<p:commandButton value="#{msgs.btnProjetoCancelar}" oncomplete="PF('assCliente').hide()"
+						actionListener="#{projetoController.limparAssociacaoCliente}" update="formAssCliente"/>	
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		
+
+	</ui:define>
+	<ui:define name="rodape">
+		<h:form id="FormMenuRodape">
+			<p:menubar id="menuPrincipal">
+				<p:menuitem value="Cadastrar Novo Projeto" icon="ui-icon-disk"
+					actionListener="#{projetoController.novoProjeto}">
+					<f:setPropertyActionListener target="#{projetoController.edicao}" value="#{false}" />
+					<f:setPropertyActionListener target="#{projetoController.novoCadastro}" value="#{true}" />
+				</p:menuitem>
+				
+				<p:menuitem value="Pesquisar" icon="ui-icon-search"
+					onclick="PF('pesquisaProjeto').show()">
+				</p:menuitem>
+				
+				<p:menuitem value="Limpar Pesquisa"
+					actionListener="#{projetoController.limparPesquisa}"
+					update=":formPrincipal:projetos">
+				</p:menuitem>
+				
+			</p:menubar>
+			
+			<ui:debug />
+			
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+
+<style type="text/css">
+	.ui-selectonemenu {
+	    width:160px !important;
+	}
+</style>
+
+</html>

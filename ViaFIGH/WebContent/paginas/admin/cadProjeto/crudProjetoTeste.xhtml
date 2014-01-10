@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+		
+<f:view locale="#{InternacionalizacaoMB.currentLocale}">	
+
+<h:head>
+	<title><h:outputText value="#{msgs.tituloCadastroProjeto}"></h:outputText></title>
+	<h:outputScript library="js" name="projeto.js"/>
+</h:head>
+
+<ui:decorate template="/template/template.xhtml">
+
+	<ui:define name="centro">
+		<!-- Adiciona Menu superior na página -->
+		<ui:include src="/paginas/menu.xhtml" />		
+		<h:form id="formPrincipal">
+			<p:growl id="growl" showDetail="true" life="2000" autoUpdate="true" />
+			<p:dataTable id="projetos" var="projeto"
+				value="#{projetoController.projetos}"
+				rowsPerPageTemplate="15,30,50,100" paginator="true"
+				selectionMode="single" rowKey="#{projeto.id}" paginatorPosition="bottom"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				editable="true" scrollable="false" resizableColumns="true"
+				styleClass="table" rows="15">
+
+				<p:column headerText="#{msgs.lbProjetoNumero}" sortBy="nome">
+					<h:outputText value="#{projeto.numeroProjeto}" style="float:left"/>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbProjetoDescricao}">
+					<h:outputText value="#{projeto.descricao}" style="float: left"/>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbProjetoDataInicio}" width="85">
+					<h:outputText value="#{projeto.dataInicio}" converter="javax.faces.DateTime"/>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbProjetoRespEmbratel}" width="250">
+					<h:outputText value="#{projeto.responsavel}" style="float:left"/>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		
+		<p:confirmDialog widgetVar="confirmarInicioNovoCadastro" resizable="false"
+			closeOnEscape="true" showEffect="fade" hideEffect="fade"
+			header="Cadastrar Novo Projeto" message="Deseja cadastrar um novo projeto ?" appendToBody="true">
+			
+			<h:form id="IniciaCadastroNovo">
+				<p:commandButton id="confirm" value="Sim, desejo"
+					oncomplete="addAnotherFornecedor();" />
+				<p:commandButton id="decline" value="Não"
+					oncomplete="PF('confirmarInicioNovoCadastro').hide();" />					
+			</h:form>
+		</p:confirmDialog>		
+		
+		<h:form id="FormCadProjeto"	style="position: absolute; left:30%; top:25%;">
+			<p:dialog widgetVar="cadProjeto" resizable="false"
+				closeOnEscape="true" showEffect="fade" hideEffect="fade"
+				header="Preencha o formulário abaixo para cadastrar um novo projeto no sistema">
+				<p:growl id="messagesFormCadastrar" showDetail="true" />
+				<p:panel id="panelCadProjeto">
+					<h:panelGrid id="gridCadProjeto" columns="2" cellpadding="5">
+						
+						<h:outputLabel value="#{msgs.lbProjetoNumero}"/>
+						<p:inputText value="#{projetoController.projeto.numeroProjeto}" 
+							style="float: left" required="true" requiredMessage="#{msgs.msgsProjetoNumero}"/>
+						
+						<h:outputLabel value="#{msgs.lbProjetoDescricao}"/>
+						<p:inputTextarea value="#{projetoController.projeto.descricao}" 
+							style="width: 300px; height: 30px; float: left"
+							required="true" requiredMessage="#{msgs.msgsProjetoDescricao}"/>
+
+						<h:outputLabel value="#{msgs.lbProjetoDataInicio}"/>
+						<p:calendar value="#{projetoController.projeto.dataInicio}" 
+							showOn="button" locale="pt_BR" maxlength="10"
+							pattern="dd/MM/yyyy" style="float: left" onkeypress="mascara(this, data)"
+							mindate="01/01/1970" maxdate="31/12/2099"
+							required="true" requiredMessage="#{msgs.msgsProjetoDataInicio}" />
+							
+						<h:outputLabel value="#{msgs.lbProjetoRespEmbratel}"/>
+						<p:inputText value="#{projetoController.projeto.responsavel}" style="float: left; width: 300px"
+							required="true" requiredMessage="#{msgs.msgsProjetoResponsavel}" />						
+					
+						<p:commandButton id="btnSalvar" value="#{msgs.btnProjetoSalvar}" icon="ui-icon-disk"
+							actionListener="#{projetoController.salvar}" 
+							update="messagesFormCadastrar, :formPrincipal:projetos, FormCadProjeto" 
+							oncomplete="if(args.validationFailed==true) {PF('cadProjeto').show()} else {PF('confirmarInicioNovoCadastro').show();}"
+						/>
+						
+						<p:commandButton id="btnLimpar" update=":FormCadProjeto:gridCadProjeto"
+							value="#{msgs.btnProjetoLimpar}" icon="ui-icon-refresh" process="@this"
+							actionListener="#{projetoController.limparBean}">
+							<p:resetInput target=":FormCadProjeto:gridCadProjeto" />
+						</p:commandButton>
+						
+					</h:panelGrid>
+				</p:panel>
+			</p:dialog>
+			
+		</h:form>
+
+	</ui:define>
+	<ui:define name="rodape">
+		<h:form id="FormMenuRodape">
+			<p:menubar id="menuPrincipal">
+				<p:menuitem value="Cadastrar Novo Projeto" icon="ui-icon-disk"
+					onclick="PF('cadProjeto').show();" type="button" ajax="true" />
+			</p:menubar>
+			
+			<ui:debug />
+			
+		</h:form>
+	</ui:define>
+
+</ui:decorate>
+</f:view>
+
+<style type="text/css">
+	.ui-selectonemenu {
+	    width:160px !important;
+	}
+</style>
+
+</html>

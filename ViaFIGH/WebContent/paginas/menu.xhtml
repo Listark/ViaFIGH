@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:form>
+	<p:menubar autoDisplay="false" style="height: 26px">
+		<p:submenu label="Cadastros">
+			<p:menuitem value="Cenários de Teste"   ajax="false" actionListener="#{menuMB.crudCenariosListener}"/>
+			<p:menuitem value="Incidentes"   		ajax="false" actionListener="#{menuMB.crudIncidentesListener}"/>
+			<p:menuitem value="Projetos"     		ajax="false" actionListener="#{menuMB.crudProjetosListener}"/>
+			<p:menuitem value="Fornecedores" 		ajax="false" actionListener="#{menuMB.crudFornecedorListener}"/>
+			<p:menuitem value="Usuários"     		ajax="false" actionListener="#{menuMB.crudUsuarioListener}"/>
+			<p:menuitem value="Teste"  		 		ajax="false" actionListener="#{menuMB.testeListener}"/>
+			<p:menuitem value="Teste 2"				ajax="false" actionListener="#{menuMB.testeListener2}"/>
+		</p:submenu>
+
+		<p:submenu label="Relatórios">
+		</p:submenu>
+
+		<p:submenu label="Sobre">
+		</p:submenu>
+
+		<f:facet name="options">
+			<p:commandButton value="Sair" icon="ui-icon-extlink"
+				action="#{loginMB.logout}" ajax="false" style="height: 26px"/>
+		</f:facet>
+	</p:menubar>
+</h:form>
+</html>

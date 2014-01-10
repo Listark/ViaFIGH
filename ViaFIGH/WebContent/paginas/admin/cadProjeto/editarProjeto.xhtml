@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+<f:view locale="#{InternacionalizacaoMB.currentLocale}">	
+
+<h:head>
+	<title><h:outputText value="#{msgs.tituloEditarUsuario}"/></title>
+	<h:outputScript library="js" name="common.js"/>
+	
+	<style>
+		.semBorda tr, .semBorda td {  
+    		border: none !important;  
+		}
+     </style>
+     
+</h:head>
+
+<ui:decorate template="/template/template.xhtml">
+
+	<ui:define name="centro">
+		<!-- Adiciona Menu superior na página -->
+		<ui:include src="/paginas/menu.xhtml" />		
+		<h:form id="formPrincipal">
+			<p:growl id="messagesEditProjeto" showDetail="true" life="2000" autoUpdate="true" />
+		
+			<div style="position: absolute; top: 50%; left: 50%; margin-top: -150px; margin-left: -200px;">
+				<p:panelGrid id="panelEditProjeto" columns="2" styleClass="semBorda">
+					
+					<f:facet name="header">
+						#{msgs.lbProjetoEditarProj}
+					</f:facet>
+				
+					<h:outputLabel value="#{msgs.lbProjetoNumero}"/>
+					<h:inputText value="#{projetoController.projetoSelected.numeroProjeto}"
+						style="float: left" required="true" requiredMessage="#{msgs.msgsProjetoNumero}"/>
+					
+					<h:outputLabel value="#{msgs.lbProjetoDescricao}"/>
+					<h:inputTextarea value="#{projetoController.projetoSelected.descricao}"
+						style="width: 300px; height: 30px; float: left"
+						required="true" requiredMessage="#{msgs.msgsProjetoDescricao}"/>
+					
+					<h:outputLabel value="#{msgs.lbProjetoDataInicio}"/>
+					<p:calendar id="inicioDate" value="#{projetoController.projetoSelected.dataInicio}" maxlength="10" 
+								pattern="dd/MM/yyyy" showOn="button" onkeypress="mascara(this, data)" style="float: left"
+								mindate="01/01/1970" maxdate="31/12/2099" validator="#{projetoController.validarIntervaloData}"/>
+								
+					<h:outputLabel value="#{msgs.lbProjetoRespEmbratel}"/>
+					<h:inputText value="#{projetoController.projetoSelected.responsavel}"
+						style="float: left; width: 300px"
+						required="true" requiredMessage="#{msgs.msgsProjetoResponsavel}"/>
+					
+				</p:panelGrid>			
+				
+				<h:panelGrid columns="2">
+					<p:commandButton value="#{msgs.btnProjetoSalvar}" update="messagesEditProjeto, :formPrincipal:panelEditProjeto"
+						actionListener="#{projetoController.salvar}"/>
+					<p:commandButton value="#{msgs.btnEditarUsuarioCancel}"
+						actionListener="#{projetoController.cancelarEdicao}"/>						
+					<p:commandButton value="#{msgs.msgsProjetoAssForn}"
+						oncomplete="PF('assFornecedores').show()"/>
+				</h:panelGrid>
+				
+				<p:dialog widgetVar="assFornecedores" appendToBody="true" closable="false"
+					modal="true" header="#{msgs.msgsProjetoAssForn}" width="700px" height="300px"
+					resizable="false" showEffect="fade" hideEffect="fade" >
+					
+					<h:form id="formAssForn">
+						<p:panel>
+							<p:dataTable id="tblUsuariosForn" value="#{projetoController.usuariosFornEdit}"
+								scrollable="true" resizableColumns="true" styleClass="table"
+								selection="#{projetoController.usuariosFornEdit}"
+								style="width:650px" var="usuario" rowKey="#{usuario.id}"
+								scrollHeight="200">
+								
+								<p:column selectionMode="multiple" width="15"/>
+								
+								<p:column headerText="#{msgs.lbProjetoNomeUsuario}">
+									#{usuario.nome}
+								</p:column>
+								
+								<p:column headerText="#{msgs.lbProjetoFornecedor}">
+									#{usuario.fornecedor.nome}
+								</p:column>
+								
+							</p:dataTable>											
+						</p:panel>
+		
+						<h:panelGrid columns="2" style="position: absolute; bottom: 0;">
+							<p:commandButton value="#{msgs.btnUsuarioAssociar}"
+								oncomplete="PF('assForn').hide()"/>
+							<p:commandButton value="#{msgs.btnProjetoCancelar}" oncomplete="PF('assForn').hide()"
+								actionListener="#{projetoController.limparAssociacaoForn}" update="formAssForn">
+							</p:commandButton>
+						</h:panelGrid>
+					</h:form>
+				
+				</p:dialog>
+
+				
+			</div>
+
+			
+		</h:form>
+
+	</ui:define>
+
+</ui:decorate>
+</f:view>
+
+<style type="text/css">
+	.ui-selectonemenu {
+	    width:160px !important;
+	}
+</style>
+
+</html>

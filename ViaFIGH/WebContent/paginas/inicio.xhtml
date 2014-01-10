@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<f:view locale="#{InternacionalizacaoMB.currentLocale}">
+	<h:head>
+		<title><h:outputText value="#{msgs.tituloTelaInicio}"/></title>
+	</h:head>	
+
+		<ui:decorate template="/template/template.xhtml">
+			<ui:define name="conteudo">
+				<!-- Adiciona Menu superior na página -->
+				<ui:include src="/paginas/menu.xhtml"/>
+			</ui:define>
+		</ui:decorate>
+	</f:view>	
+</html>
+

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+<ui:composition template="/template/template.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="#{msgs.tituloCadastroFornecedor}"/>
+	</ui:define>
+	
+	<ui:define name="conteudo">
+		<ui:include src="/paginas/menu.xhtml" />
+		
+		<h:form id="formPrincipal" prependId="false">
+			<p:growl id="mensagens" showDetail="true" life="3000"/>
+			<p:dataTable id="tblFornecedores" var="forn" 
+						 value="#{fornecedorController.fornecedores}"
+					     rowKey="#{forn.id}" rows="22"
+					     scrollable="true" scrollHeight="470">
+					     
+				<p:column headerText="#{msgs.lbFornecedorCNPJ}">
+					<h:outputText value="#{forn.CNPJ}"/>					
+				</p:column>
+				
+				<p:column headerText="#{msgs.lbFornecedorNome}">
+					<h:outputText value="#{forn.nome}"/>
+				</p:column>
+			
+				<p:column headerText="#{msgs.lbFornecedorEndereco}">
+					<h:outputText value="#{forn.endereco.logradouro.nome}"/>
+				</p:column>
+				
+				<p:column headerText="#{msgs.lbFornecedorNumero}">
+					<h:outputText value="#{forn.endereco.numero}"/>
+				</p:column>
+				
+				<p:column headerText="#{msgs.lbFornecedorCidade}">
+					<h:outputText value="#{forn.endereco.logradouro.cidade.nome}"/>
+				</p:column>
+				
+				<p:column headerText="#{msgs.lbFornecedorUF}">
+					<center>
+						<h:outputText value="#{forn.endereco.logradouro.cidade.estado.sigla}"/>
+					</center>
+				</p:column>
+				
+				<p:column headerText="#{msgs.lbFornecedorCep}">
+					<h:outputText value="#{forn.endereco.logradouro.cep}"/>
+				</p:column>
+				
+				<p:column headerText="#{msgs.lbFornecedorContato}">
+					<h:outputText value="#{forn.contato}"/>
+				</p:column>
+				
+				<p:column headerText="#{msgs.lbFornecedorTelefone}">
+					<h:outputText value="#{forn.telefone}"/>
+				</p:column>
+				
+				<p:column headerText="#{msgs.lbFornecedorEmail}">
+					<h:outputText value="#{forn.email}"/>
+				</p:column>
+				
+				<p:column headerText="#{msgs.lbFornecedorEditar}" 
+						  width="5%">
+					<center>
+						<p:commandButton icon ="ui-icon-pencil" style="height: 7px; width: 7px"
+										 update=":formCadForn:cadForn"
+										 actionListener="#{fornecedorController.editar(forn)}">
+						</p:commandButton>
+					</center>
+				</p:column>
+				
+				<p:column headerText="#{msgs.btnFornecedorExcluir}" width="5%" >
+					<center>
+						<p:commandButton icon="ui-icon-trash" style="height: 7px; width: 7px"
+							onclick="PF('wExclusao').show();">
+							<f:setPropertyActionListener target="#{fornecedorController.fornecedor}" value="#{forn}" />							
+						</p:commandButton>
+					</center>
+				</p:column>					
+
+			</p:dataTable>
+			
+		</h:form>
+	
+			
+		<h:form id="formCadForn" prependId="false">
+			<p:dialog widgetVar="wForn" id="cadForn" resizable="false" 
+					  closeOnEscape="true" showEffect="fade" hideEffect="fade"
+					  modal="true" >
+				
+				<f:facet name="header">
+					<h:outputText value="#{fornecedorController.edicao ? msgs.msgsFornecedorEdicao : msgs.msgsFornecedorCadastro}"/>
+				</f:facet>
+				
+				<h:panelGrid columns="6" cellpadding="4">							
+					<h:outputLabel value="#{msgs.lbFornecedorFornecedor}" />
+					<p:inputText value="#{fornecedorController.fornecedor.nome}" 
+							     required="true" requiredMessage="#{msgs.msgsFornecedorNome}"
+							     style="text-transform:uppercase;"/>
+					
+					<h:outputLabel value="#{msgs.lbFornecedorCNPJ}" />
+					<p:inputMask value="#{fornecedorController.fornecedor.CNPJ}" 
+								 mask="?99.999.999/9999-99" />
+					
+					<h:outputLabel value="#{msgs.lbFornecedorCep}" />
+					<p:inputMask value="#{fornecedorController.fornecedor.endereco.logradouro.cep}" 
+								 mask="99.999-999" />
+
+					<h:outputLabel value="#{msgs.lbFornecedorUF}" />
+					<p:selectOneMenu value="#{fornecedorController.estadoId}" 
+									 required="true" requiredMessage="#{msgs.msgsFornecedorEstado}">
+						<f:selectItem itemLabel="#{msgs.lbMenuSelecione}"/>
+						<f:selectItems value="#{fornecedorController.estados}"
+									   var="estado" itemLabel="#{estado.sigla}"
+									   itemValue="#{estado.id}"
+									   />
+						<p:ajax event="change" listener="#{fornecedorController.carregarComboCidades}"
+								update="cboCidades"/>
+					</p:selectOneMenu>
+					
+					<h:outputLabel value="#{msgs.lbFornecedorCidade}" />
+					<p:selectOneMenu value="#{fornecedorController.cidadeId}" id="cboCidades"
+									 required="true" requiredMessage="#{msgs.msgsFornecedorCidade}">
+						<f:selectItem itemLabel="#{msgs.lbMenuSelecione}"/>
+						<f:selectItems value="#{fornecedorController.cidades}"
+									   var="cidade" itemLabel="#{cidade.nome}"
+									   itemValue="#{cidade.id}"
+									   />
+					</p:selectOneMenu>
+					
+					<h:outputLabel value="#{msgs.lbFornecedorEndereco}" />
+					<p:inputText value="#{fornecedorController.fornecedor.endereco.logradouro.nome}"
+								 style="text-transform:uppercase;"/>
+					
+					<h:outputLabel value="#{msgs.lbFornecedorNumero}" />
+					<p:inputText value="#{fornecedorController.fornecedor.endereco.numero}"
+								 style="text-transform:uppercase;"/>
+					
+					<h:outputLabel value="#{msgs.lbFornecedorContato}" />
+					<p:inputText value="#{fornecedorController.fornecedor.contato}"
+								 required="true" requiredMessage="#{msgs.msgsFornecedorContato}"
+								 style="text-transform:uppercase;"/>
+					
+					<h:outputLabel value="#{msgs.lbFornecedorTelefone}" />
+					<p:inputMask value="#{fornecedorController.fornecedor.telefone}"
+								 required="true" requiredMessage="#{msgs.msgsFornecedorTelefone}" 
+								 mask="(99) ?9 9999-9999"/>
+								 
+					
+					<h:outputLabel value="#{msgs.lbFornecedorEmail}" />
+					<p:inputText value="#{fornecedorController.fornecedor.email}"
+								 style="text-transform:uppercase;"/>					
+				</h:panelGrid>	
+				
+				<p:separator />
+				
+				<center>
+					<p:commandButton value="#{msgs.btnFornecedorSalvar}" icon="ui-icon-disk"
+									 actionListener="#{fornecedorController.salvar}"
+									 oncomplete="if(args.validationFailed){PF('wForn').show()}"
+									 update=":formPrincipal:tblFornecedores, :formPrincipal:mensagens, cadForn">
+					</p:commandButton>
+				</center>					
+				
+	
+			</p:dialog>
+	
+		</h:form>
+		
+		<h:form id="formConfirmarExclusao" prependId="false">
+			<p:confirmDialog header="#{msgs.lbFornecedorExclusao}" message="#{msgs.msgsFornecedorExclusao}"
+							 rezizable="false" closeOnEscape="true" hideEffect="fade"
+							 showEffect="fade" widgetVar="wExclusao">
+				<p:commandButton value="#{msgs.msgsFornecedorConfirmar}" 
+								 actionListener="#{fornecedorController.excluir}"
+								 update=":formPrincipal:tblFornecedores"/>
+								 
+				<p:commandButton value="#{msgs.msgsFornecedorCancelar}"
+								 onclick="PF('wExclusao').hide()"/>								 
+			</p:confirmDialog>
+		</h:form>
+		
+		<h:form prependId="false">
+			<p:confirmDialog header="#{msgs.msgsFornecedorCadastrarNovo}" message="#{msgs.msgsFornecedorCadastrarNovo2}"
+							 rezizable="false" closeOnEscape="true" hideEffect="fade"
+							 showEffect="fade" widgetVar="wNovoCadastro">
+				
+				<p:commandButton value="#{msgs.msgsFornecedorConfirmar}"
+								 onclick="PF('wNovoCadastro').hide()"
+								 oncomplete="PF('wForn').show()"/>
+								 
+				<p:commandButton value="#{msgs.msgsFornecedorCancelar}"
+							     onclick="PF('wNovoCadastro').hide()"/>								 							 
+			
+			</p:confirmDialog>		
+		</h:form>
+		
+		<h:form id="formPesquisa" prependId="false">
+			<p:dialog widgetVar="wPesquisa" id="pesquisa" 
+					  header="#{msgs.msgsFornecedorPesquisar2}"
+					  modal="true" closeOnEscape="true" resizable="false" >
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel value="#{msgs.lbFornecedorNome}"/>
+					<p:inputText value="#{fornecedorController.fornecedor.nome}"
+								 style="width:200px; text-transform:uppercase;"/>
+				</h:panelGrid>
+				
+				<center>
+					<p:commandButton value="#{msgs.msgsFornecedorPesquisar}"
+						             actionListener="#{fornecedorController.pesquisar(fornecedorController.fornecedor.nome)}"
+						             update=":formPrincipal:tblFornecedores, :formPrincipal:mensagens, pesquisa"/>
+				</center>
+			</p:dialog>
+		</h:form>
+				
+	</ui:define>
+	
+	<ui:define name="rodape">
+		<h:form prependId="false">
+			<p:menubar>
+				<p:menuitem value="#{msgs.btnFornecedorCadastrar}"
+							actionListener="#{fornecedorController.cadastrar}"
+				       		icon="ui-icon-disk" update=":formCadForn:cadForn">
+				</p:menuitem>
+				<p:menuitem value="#{msgs.msgsFornecedorPesquisar}"
+							onclick="PF('wPesquisa').show()"
+							icon="ui-icon-search" >
+				</p:menuitem>
+				<p:menuitem value="#{msgs.msgsFornecedorLimparPesquisa}"
+						    actionListener="#{fornecedorController.limparPesquisa}"
+						    update=":formPrincipal:tblFornecedores, :formCadForn:cadForn"
+						    icon="ui-icon-close">
+				</p:menuitem>
+			</p:menubar>
+		</h:form>
+	</ui:define>
+</ui:composition>
+	
+</html>

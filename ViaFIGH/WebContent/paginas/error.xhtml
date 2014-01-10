@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<title>Custom Error Page</title>
+	<style type="text/css">
+		.divCentro {
+			border: 1px solid #000;
+			width: 600px;
+			text-align: left;
+			margin-left: auto;
+			margin-right: auto; 
+		}
+		
+		body {
+			margin: 0px;
+			text-align: center;
+		}
+	</style>
+</h:head>
+	
+<h:body>
+	<div class="divCentro">
+		Error details: <br />
+ 		#{flash.keep.errorDetails}
+	</div>
+</h:body>
+	
+</html>

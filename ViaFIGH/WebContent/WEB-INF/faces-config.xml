@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+	<application>
+	
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+
+		<!-- Arquivos de internacionalizacao -->
+		<locale-config>
+			<default-locale>pt_BR</default-locale>
+			<supported-locale>en_US</supported-locale>
+		</locale-config>
+		
+		<!-- Definicao do resource para as messages da WebApp -->
+		<resource-bundle>
+			<base-name>br.com.ebt.figh.web.util.locale.messages</base-name>
+			<var>msgs</var>
+		</resource-bundle>
+		
+		<message-bundle>
+			br.com.ebt.figh.web.util.locale.messages
+		</message-bundle>
+		
+	</application>
+
+	<lifecycle>
+		<phase-listener>br.com.ebt.figh.web.security.LoginErrorPhaseListener</phase-listener>
+	</lifecycle>
+	
+	<factory>
+		<exception-handler-factory>
+			br.com.ebt.figh.exception.CustomExceptionHandlerFactory
+		</exception-handler-factory>
+	</factory>
+	
+
+</faces-config>

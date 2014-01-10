@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title><ui:insert name="title">${msg.title}</ui:insert></title>
+
+	<h:outputScript name="locale.js" library="js" />
+
+	<style type="text/css">
+body {
+	background-color: #eeeeee;
+	font-size: 12px
+}
+
+table tr {
+	font-size: 12px;
+}
+
+table tr td {
+	height: 8px;
+}
+
+selectOne {
+	float: left;
+	min-width: 100px;
+}
+
+form .texto-left-out {
+	float: left;
+}
+
+form .texto-left-inp {
+	float: left;
+	width: 100%;
+}
+
+form .texto-width10 {
+	width: 10px;
+}
+
+#cabecalho {
+	width: 100%;
+	min-height: 20%;
+	max-height: 20%;
+	background-color: white;
+}
+
+#conteudo {
+	
+}
+
+#panelRodape {
+
+}
+
+.ui-panel .ui-panel-content {
+    padding: 0;
+}
+
+</style>
+
+</h:head>
+
+<h:body>
+	<p:panel>
+		<div id="cabecalho">
+			<ui:insert name="cabecalho">
+				<center>
+					<h:graphicImage url="/resources/img/logo.png"/>
+				</center>
+			</ui:insert>
+		</div>
+	
+		<div id="conteudo">
+			<ui:insert name="conteudo" /> 
+		</div>
+	</p:panel>
+	
+	<p:layoutUnit position="south">
+
+		<div id="rodape">
+			<ui:insert name="rodape" />
+		</div>
+
+	</p:layoutUnit>
+	
+</h:body>
+</html>

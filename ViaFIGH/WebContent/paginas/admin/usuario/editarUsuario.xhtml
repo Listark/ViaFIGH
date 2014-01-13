@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+<f:view locale="#{InternacionalizacaoMB.currentLocale}">	
+
+<h:head>
+	<title><h:outputText value="#{msgs.tituloEditarUsuario}"/></title>
+	<style>
+		.semBorda tr, .semBorda td {  
+    		border: none !important;  
+		}  
+     </style>
+</h:head>
+
+<ui:decorate template="/template/template.xhtml">
+
+	<ui:define name="centro">
+		<!-- Adiciona Menu superior na página -->
+		<ui:include src="/paginas/menu.xhtml" />		
+		<h:form id="formPrincipal">
+			<p:growl id="messagesEditUsuario" showDetail="true" life="2000" autoUpdate="true" />
+		
+			<div style="position: absolute; top: 50%; left: 50%; margin-top: -150px; margin-left: -200px;">
+				<p:panelGrid id="panelEditUsuario" columns="2" styleClass="semBorda">
+					
+					<f:facet name="header">
+						#{msgs.tituloEditarUsuario}
+					</f:facet>
+				
+					<h:outputLabel value="#{msgs.lbUsuarioNome}"/>
+					<h:inputText value="#{usuarioController.usuarioSelected.nome}" style="width: 300px"/>
+					
+					<h:outputLabel value="#{msgs.lbUsuarioEmail}"/>
+					<h:inputText value="#{usuarioController.usuarioSelected.email}" style="width: 300px"/>
+					
+					<h:outputLabel value="#{msgs.lbUsuarioLogin}"/>
+					<h:inputText value="#{usuarioController.usuarioSelected.login}" style="width: 300px"/>
+					
+					<h:outputLabel value="#{msgs.lbUsuarioRole}" />
+					<p:selectOneMenu style="float: left" value="#{usuarioController.usuarioSelected.perfis[0].id}"
+						required="true" requiredMessage="#{msgs.msgsUsuarioPerfil}">
+						<p:ajax update="menuForn" listener="#{usuarioController.showHideComboFornEdit}" event="change"/>
+						<f:selectItems value="#{usuarioController.perfis}"
+							var="perfil" itemLabel="#{perfil.descr}" itemValue="#{perfil.id}"/>
+					</p:selectOneMenu>
+
+					<h:outputLabel value="#{msgs.lbFornecedorFornecedor}" />
+					<p:selectOneMenu id="menuForn" value="#{usuarioController.idFornecedor}" style="float:left"
+						disabled="#{usuarioController.usuarioSelected.perfis[0].id==1}" required="true" requiredMessage="#{msgs.msgsUsuarioFornecedor}">
+						<p:ajax update="menuForn" listener="#{usuarioController.showHideComboFornEdit}" event="change"/>
+						<f:selectItem itemLabel="#{msgs.lbMenuSelecione}" itemValue="0"/> 
+						<f:selectItems value="#{fornecedorController.fornecedores}"
+							var="forn" itemLabel="#{forn.nome}" itemValue="#{forn.id}"/>
+					</p:selectOneMenu>							
+				
+						
+				</p:panelGrid>			
+				
+				<h:panelGrid columns="2">
+					<p:commandButton value="#{msgs.btnSalvarUsuario}" update="messagesEditUsuario, :formPrincipal:panelEditUsuario"
+						actionListener="#{usuarioController.salvarEdicao}"/>
+					<p:commandButton value="#{msgs.btnEditarUsuarioCancel}"
+						actionListener="#{usuarioController.cancelarEdicao}"/>						
+						
+				</h:panelGrid>
+							
+			</div>
+			
+		</h:form>
+
+	</ui:define>
+
+</ui:decorate>
+</f:view>
+
+<style type="text/css">
+	.ui-selectonemenu {
+	    width:160px !important;
+	}
+</style>
+
+</html>

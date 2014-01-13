@@ -9,7 +9,7 @@ import br.com.ebt.figh.web.util.FacesUtil;
 public class MenuMB {
 
 	private static final String cadFornecedorURL   = "/paginas/admin/fornecedor/fornecedor.jsf";
-	private static final String crudUsuarioURL 	   = "/paginas/admin/cadUsuario/crudUsuarios.jsf";
+	private static final String crudUsuarioURL 	   = "/paginas/admin/usuario/usuarios.jsf";
 	private static final String crudProjetosURL    = "/paginas/admin/cadProjeto/crudProjeto.jsf";
 	private static final String crudCenariosURL    = "/paginas/admin/cenario/lista.jsf";
 	private static final String crudIncidentesURL  = "";

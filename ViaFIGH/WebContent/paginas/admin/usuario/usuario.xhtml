@@ -6,6 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core">
 	
+<<<<<<< HEAD
 
 <ui:composition template="/template/template.xhtml">
 	
@@ -147,6 +148,248 @@
 		</h:form>
 	</ui:define>
 	
+=======
+	<ui:define name="title">
+		<h:outputText value="#{msgs.tituloCadastroUsuario}"/>
+		<h:outputScript library="js" name="usuario.js"/>
+	</ui:define>
+
+<ui:composition template="/template/template.xhtml">
+
+	<ui:define name="conteudo">
+		<!-- Adiciona Menu superior na página -->
+		<ui:include src="/paginas/menu.xhtml" />		
+		<h:form id="formPrincipal">
+			<p:growl id="growl" showDetail="true" life="2000" autoUpdate="true" />
+			<p:dataTable id="usuarios" var="user"
+				value="#{usuarioController.usuarios}"
+				rowsPerPageTemplate="15,30,50,100" paginator="true"
+				selectionMode="single" rowKey="#{user.id}" paginatorPosition="bottom"
+				rows="15" sortBy="nome"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				editable="true" scrollable="false"
+				resizableColumns="true"
+				styleClass="table">
+
+				<p:column headerText="#{msgs.lbUsuarioNome}" sortBy="nome">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.nome}"/>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.nome}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbUsuarioEmail}" sortBy="email">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.email}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.email}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbUsuarioRole}">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.perfis[0].descr}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.descricao}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbUsuarioLogin}" sortBy="login">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{user.login}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{user.login}" style="width:100%" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbUsuarioEditar}" width="5%">
+					<p:commandButton actionListener="#{usuarioController.editar}"
+						icon="ui-icon-pencil" style="height: 20px;">
+						<f:setPropertyActionListener 
+							target="#{usuarioController.usuarioSelected}" value="#{user}" />
+					</p:commandButton>
+				</p:column>
+
+				<p:column headerText="#{msgs.lbUsuarioExcluir}"  width="5%" >
+					<p:commandButton id="btnExcluir" icon="ui-icon-trash" style="height: 7px; width: 7px;"
+						onclick="PF('confirmarExclusao').show();" ajax="true"
+						title="Excluir">
+						<f:setPropertyActionListener
+							target="#{usuarioController.usuarioSelected}" value="#{user}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+		</h:form>
+
+		<p:confirmDialog widgetVar="confirmarExclusao" resizable="false"
+				closeOnEscape="true" showEffect="fade" hideEffect="fade"
+				header="Excluir Usuário" message="Deseja realmente excluir este usuário?" appendToBody="true">
+				<h:form id="ExcluirUsuario">
+				<p:commandButton id="confirm" value="Sim, desejo"
+					oncomplete="PF('confirmarExclusao').hide();"
+					actionListener="#{usuarioController.excluirUsuario}" update=":formPrincipal:usuarios"/>
+				<p:commandButton id="decline" value="Não"
+					oncomplete="PF('confirmarExclusao').hide();" />
+					</h:form>
+		</p:confirmDialog>
+
+		<p:confirmDialog widgetVar="confirmarInicioNovoCadastro" resizable="false"
+			closeOnEscape="true" showEffect="fade" hideEffect="fade"
+			header="Cadastrar Novo Usuário" message="Deseja cadastrar um novo usuário ?" appendToBody="true">
+			
+			<h:form id="IniciaCadastroNovo">
+				<p:commandButton id="confirm" value="Sim, desejo"
+					oncomplete="addAnotherUser();" />
+				<p:commandButton id="decline" value="Não"
+					oncomplete="PF('confirmarInicioNovoCadastro').hide();" />					
+			</h:form>
+		
+		</p:confirmDialog>
+		
+		<h:form id="FormPesquisaUsuario" style="position: absolute; left: 30%; top:25%">
+			<p:dialog widgetVar="pesquisaUsuario" resizable="false" closeOnEscape="true"
+				showEffect="fade" hideEffect="fade" header="Pesquisa de Usuário">
+				<p:growl id="messagesFormPesquisaUsuario" showDetail="true"/>
+				
+				<p:panel id="panelPesquisaUsuario">
+					<h:panelGrid id="gridPesquisaUsuario" columns="2" cellpadding="5">
+						<h:outputLabel value="#{msgs.lbUsuarioNome}"/>
+						<p:inputText id="idNome" value="#{usuarioController.usuario.nome}"
+							size="50"/>
+							
+						<h:outputLabel value="#{msgs.lbUsuarioEmail}"/>
+						<p:inputText id="idEmail" value="#{usuarioController.usuario.email}"
+							size="50"/>
+							
+						<h:outputLabel value="#{msgs.lbUsuarioLogin}"/>
+						<p:inputText id="idLogin" value="#{usuarioController.usuario.login}"
+							size="50"/>
+						
+						<h:outputLabel value="#{msgs.lbUsuarioRole}"/>
+						<p:selectOneMenu id="idPerfil" value="#{usuarioController.idPerfil}"
+							style="float:left">
+							<p:ajax update="menuFornecedores" listener="#{usuarioController.showHideComboForn}" event="change"/>
+							<f:selectItem itemLabel="#{msgs.lbMenuSelecione}" noSelectionOption="true"/>
+							<f:selectItem itemLabel="#{msgs.lbMenuClaroTV}"  itemValue="1" />
+							<f:selectItem itemLabel="#{msgs.lbMenuParceiro}" itemValue="2" />
+						</p:selectOneMenu>
+						
+						<h:outputLabel value="#{msgs.lbFornecedorFornecedor}"/>
+						<p:selectOneMenu id="menuFornecedores" value="#{usuarioController.idFornecedor}"
+							style="float:left" disabled="#{usuarioController.hideComboForn}">
+							<f:selectItem itemLabel="#{msgs.lbMenuSelecione}" itemValue="0"/>
+							<f:selectItems value="#{fornecedorController.fornecedores}"
+								var="forn" itemLabel="#{forn.nome}" itemValue="#{forn.id}"/>
+						</p:selectOneMenu>
+						
+						<p:commandButton id="btnPesquisar" value="#{msgs.btnPesquisarUsuario}" 
+							icon="ui-icon-search" update="messagesFormPesquisaUsuario, :formPrincipal:usuarios, FormPesquisaUsuario"
+							actionListener="#{usuarioController.buscar}">													
+						</p:commandButton>
+							
+						<p:commandButton value="#{msgs.btnLimparUsuario}" icon="ui-icon-refresh" 
+							update=":FormPesquisaUsuario:gridPesquisaUsuario" process="@this"
+							actionListener="#{usuarioController.limparBean}">
+							<p:resetInput target=":FormPesquisaUsuario:gridPesquisaUsuario" />
+						</p:commandButton>
+															
+					</h:panelGrid>
+				</p:panel>
+			</p:dialog>
+		</h:form>
+
+		<h:form id="FormCadastroUsuarios"
+			style="position: absolute; left:30%; top:25%;">
+			<!-- FORMULÁRIO DE CADASTRO DE USUÁRIOS -->
+			<p:dialog widgetVar="cadUsuario" resizable="false"
+				closeOnEscape="true" showEffect="fade" hideEffect="fade"
+				header="Preencha o formulário abaixo para cadastrar um novo usuário no sistema">
+				<p:growl id="messagesFormCadastrar" showDetail="true" />
+				<p:panel id="panelCadUsuario">
+					<h:panelGrid id="gridCadUsuario" columns="2" cellpadding="5">
+						
+						<h:outputLabel value="#{msgs.lbUsuarioNome}"/>
+						<p:inputText id="idNome" value="#{usuarioController.usuario.nome}" 
+							size="50" required="true" requiredMessage="#{msgs.msgsUsuarioNome}" />
+						
+						<h:outputLabel value="#{msgs.lbUsuarioEmail}" />
+						<p:inputMask id="idEmail"
+							value="#{usuarioController.usuario.email}" size="50" 
+							required="true" requiredMessage="#{msgs.msgsUsuarioEmail}" />
+
+						<h:outputLabel value="#{msgs.lbUsuarioLogin}" />
+						<p:inputMask id="idLogin"
+							value="#{usuarioController.usuario.login}" size="50"
+							required="true" requiredMessage="#{msgs.msgsUsuarioLogin}" />
+
+						<h:outputLabel value="#{msgs.lbUsuarioRole}" />
+						<p:selectOneMenu id="idPerfil" styleClass="selectOne" value="#{usuarioController.idPerfil}"
+							required="true" requiredMessage="#{msgs.msgsUsuarioPerfil}" style="float:left">
+							<p:ajax update="menuFornecedores" listener="#{usuarioController.showHideComboForn}" event="change"/> 
+							<f:selectItem itemLabel="#{msgs.lbMenuSelecione}" />
+							<f:selectItems value="#{usuarioController.perfis}" 
+								var="perfil" itemLabel="#{perfil.descr}" itemValue="#{perfil.id}"/>
+						</p:selectOneMenu>
+
+						<h:outputLabel value="#{msgs.lbFornecedorFornecedor}"/>
+						<p:selectOneMenu id="menuFornecedores" styleClass="selectOne" value="#{usuarioController.idFornecedor}"
+							required="true" requiredMessage="#{msgs.msgsUsuarioFornecedor}" disabled="#{usuarioController.hideComboForn}"
+							style="float:left">
+							<f:selectItem itemLabel="#{msgs.lbMenuSelecione}"/>
+							<f:selectItems value="#{fornecedorController.fornecedores}" 
+								var="forn" itemLabel="#{forn.nome}" itemValue="#{forn.id}"/>
+						</p:selectOneMenu>						
+					
+						<p:commandButton id="btnSalvar" value="#{msgs.btnSalvarUsuario}" icon="ui-icon-disk" 
+							update="messagesFormCadastrar, :formPrincipal:usuarios, FormCadastroUsuarios" 
+							actionListener="#{usuarioController.salvarUsuario}"
+							oncomplete="if(args.validationFailed==true) {PF('cadUsuario').show()} else {PF('confirmarInicioNovoCadastro').show();}"
+						/>
+						
+						<p:commandButton id="btnLimpar" update=":FormCadastroUsuarios:gridCadUsuario"
+							value="#{msgs.btnLimparUsuario}" icon="ui-icon-refresh" process="@this"
+							actionListener="#{usuarioController.limparBean}">
+							<p:resetInput target=":FormCadastroUsuarios:gridCadUsuario" />
+						</p:commandButton>
+						
+					</h:panelGrid>
+				</p:panel>
+			</p:dialog>
+			
+		</h:form>
+
+	</ui:define>
+	<ui:define name="rodape">
+		<h:form id="FormMenuRodape">
+			<p:menubar id="menuPrincipal">
+				<p:menuitem value="Cadastrar Novo Usuário" icon="ui-icon-disk"
+					onclick="PF('cadUsuario').show();" type="button" ajax="true" />
+				<p:menuitem value="Pesquisar usuário" icon="ui-icon-search" update=":FormPesquisaUsuario" 
+					ajax="true" oncomplete="PF('pesquisaUsuario').show()" actionListener="#{usuarioController.limparBeanPesquisa}"/>
+				<p:menuitem value="Limpar Pesquisa" icon="ui-icon-close" ajax="true" 
+					actionListener="#{usuarioController.limparPesquisa}" update=":formPrincipal:usuarios" />
+			</p:menubar>
+			
+			<ui:debug />
+			
+		</h:form>
+	</ui:define>
+
+>>>>>>> branch 'master' of https://github.com/brunoalex88/ViaFIGH.git
 </ui:composition>
 
 <style type="text/css">

@@ -21,7 +21,8 @@
 			<p:dataTable id="tblFornecedores" var="forn" 
 						 value="#{fornecedorController.fornecedores}"
 					     rowKey="#{forn.id}" rows="22"
-					     scrollable="true" scrollHeight="470">
+					     scrollable="true" scrollHeight="470"
+					     resizableColumns="true">
 					     
 				<p:column headerText="#{msgs.lbFornecedorCNPJ}">
 					<h:outputText value="#{forn.CNPJ}"/>					

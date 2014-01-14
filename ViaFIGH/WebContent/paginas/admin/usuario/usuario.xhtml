@@ -84,16 +84,17 @@
 								 required="true" requiredMessage="#{msgs.msgsUsuarioLogin}" />
 					
 					<h:outputLabel value="#{msgs.lbUsuarioRole}" />
-					<p:selectOneMenu value="{usuarioController.idPerfil}"
-									 required="true" requiredMessage="#{msgs.msgsUsuarioPerfil}">	
-						<f:selectItem itemLabel="#{msgs.lbMenuSelecione}"/>
+					<p:selectOneMenu value="#{usuarioController.idPerfil}"
+									 required="true" requiredMessage="#{msgs.msgsUsuarioPerfil}">
+						<f:selectItem itemLabel="#{msgs.lbMenuSelecione}" />
 						<f:selectItems value="#{usuarioController.perfis}"
 									   var="perfil" itemLabel="#{perfil.descr}"
 									   itemValue="#{perfil.id}"/>
+						<p:ajax event="change" listener="#{usuarioController.showHideComboForn}" update="cboFornecedor"/>
 					</p:selectOneMenu>
 					
-					<h:outputLabel value="#{msgs.lbFornecedorFornecedor}"/>
-					<p:selectOneMenu id="cboFornecedor" value="#{usuarioController.idFornecedor}"
+					<h:outputLabel value="#{msgs.lbFornecedorFornecedor}"/>					
+					<p:selectOneMenu value="#{usuarioController.idFornecedor}" id="cboFornecedor"
 									 required="true" requiredMessage="#{msgs.msgsUsuarioFornecedor}"
 									 disabled="#{usuarioController.hideComboForn}">
 						<f:selectItem itemLabel="#{msgs.lbMenuSelecione}"/>
@@ -101,10 +102,10 @@
 									   var="forn" itemLabel="#{forn.nome}"
 									   itemValue="#{forn.id}"/>
 					</p:selectOneMenu>
-					
+
 					<p:commandButton value="#{msgs.btnSalvarUsuario}" icon="ui-icon-disk" 
 							update=":formLista:mensagens, :formLista:tblUsuarios, cadUsuario" 
-							actionListener="#{usuarioController.salvarUsuario}"
+							actionListener="#{usuarioController.salvar}"
 							oncomplete="if(args.validationFailed==true) {PF('wUsuario').show()}" />
 										     
 				</h:panelGrid>
@@ -118,13 +119,13 @@
 							 showEffect="fade" widgetVar="wExclusao">
 				<p:commandButton value="#{msgs.lbUsuarioSim}" 
 								 actionListener="#{usuarioController.excluir}"
-								 update=":formLista:tblUsuarios"/>
+								 update=":formLista:tblUsuarios, :formLista:mensagens"/>
 								 
 				<p:commandButton value="#{msgs.lbUsuarioNao}"
 								 onclick="PF('wExclusao').hide()"/>								 
 			</p:confirmDialog>
 		</h:form>
-		
+	
 		<h:form prependId="false">
 			<p:menubar>
 				<p:menuitem value="#{msgs.tituloCadastroUsuario}"
@@ -142,13 +143,9 @@
 				</p:menuitem>
 			</p:menubar>
 		</h:form>		
-		
+			
 	</ui:define>
 	
-	<ui:define name="rodape">
-		
-	</ui:define>
-
 </ui:composition>
 
 <style type="text/css">

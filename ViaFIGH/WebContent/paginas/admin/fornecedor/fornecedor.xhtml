@@ -8,7 +8,7 @@
 
 
 <ui:composition template="/template/template.xhtml">
-
+	
 	<ui:define name="title">
 		<h:outputText value="#{msgs.tituloCadastroFornecedor}"/>
 	</ui:define>
@@ -249,5 +249,15 @@
 		</h:form>
 	</ui:define>
 </ui:composition> 
-	
+
+<p:ajaxStatus style="width:60px;height:60px;">
+		<f:facet name="start">  
+	        <h:graphicImage value="/resources/wait.gif" />  
+	    </f:facet>  
+      
+    	<f:facet name="complete">  
+	        <h:outputText value="" />  
+	    </f:facet>  
+</p:ajaxStatus>
+
 </html>

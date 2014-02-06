@@ -18,11 +18,19 @@
 		
 		<h:form id="formPrincipal" prependId="false">
 			<p:growl id="mensagens" showDetail="true" life="3000"/>
+			
+			<br />
+			
 			<p:dataTable id="tblFornecedores" var="forn" 
 						 value="#{fornecedorController.fornecedores}"
 					     rowKey="#{forn.id}" rows="22"
-					     scrollable="true" scrollHeight="470"
-					     resizableColumns="true">
+					     scrollable="true" scrollHeight="410"
+					     resizableColumns="true"
+					     paginator="true" paginatorPosition="bottom">
+				
+				<f:facet name="header">
+					<h:outputText value="#{msgs.tituloCadastroFornecedor}"/>
+				</f:facet>
 					     
 				<p:column headerText="#{msgs.lbFornecedorCNPJ}">
 					<h:outputText value="#{forn.CNPJ}"/>					

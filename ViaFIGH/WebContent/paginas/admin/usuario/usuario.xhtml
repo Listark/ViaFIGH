@@ -18,11 +18,18 @@
 		<h:form id="formLista" prependId="false">
 			<p:growl id="mensagens" showDetail="true" life="3000"/>
 			
+			<br />
+			
 			<p:dataTable id="tblUsuarios" var="usuario" 
 						 value="#{usuarioController.usuarios}"
 					     rowKey="#{usuario.id}" rows="22"
-					     scrollable="true" scrollHeight="470"
-					     resizableColumns="true">
+					     scrollable="true" scrollHeight="410"
+					     resizableColumns="true"
+					     paginator="true" paginatorPosition="bottom">
+			
+				<f:facet name="header">
+					<h:outputText value="#{msgs.tituloUsuario}"/>
+				</f:facet>
 			
 				<p:column headerText="#{msgs.lbUsuarioNome}" sortBy="nome">
 					<h:outputText value="#{usuario.nome}"/>
@@ -113,6 +120,23 @@
 			</p:dialog>		
 		</h:form>
 		
+		<h:form prependId="false">
+			<p:confirmDialog header="#{msgs.msgsUsuarioCadastroNovo}"
+							 message="#{msgs.msgsUsuarioCadastroNovo2}"
+							 showEffect="fade" hideEffect="fade"
+							 widgetVar="wNovoCadastro">
+							
+				<p:commandButton value="#{msgs.lbUsuarioSim}"
+								 onclick="PF('wNovoCadastro').hide()"
+								 oncomplete="PF('wUsuario').show()"/>
+								 
+				<p:commandButton value="#{msgs.btnEditarUsuarioCancel}"
+							     onclick="PF('wNovoCadastro').hide()"/>		
+			
+			
+			</p:confirmDialog>
+		</h:form>
+		
 		<h:form id="formConfirmarExclusao" prependId="false">
 			<p:confirmDialog header="#{msgs.msgsUsuarioExcluir}" message="#{msgs.msgsUsuarioExcluir2}"
 							 rezizable="false" closeOnEscape="true" hideEffect="fade"
@@ -124,6 +148,24 @@
 				<p:commandButton value="#{msgs.lbUsuarioNao}"
 								 onclick="PF('wExclusao').hide()"/>								 
 			</p:confirmDialog>
+		</h:form>
+		
+		<h:form id="formPesquisa" prependId="false">
+			<p:dialog widgetVar="wPesquisa" id="pesquisa" 
+					  header="#{msgs.msgsUsuarioPesquisar2}"
+					  modal="true" closeOnEscape="true" resizable="false" >
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel value="#{msgs.lbUsuarioNome}"/>
+					<p:inputText value="#{usuarioController.usuario.nome}"
+								 style="width:200px; text-transform:uppercase;"/>
+				</h:panelGrid>
+				
+				<center>
+					<p:commandButton value="#{msgs.msgsUsuarioPesquisar}"
+						             actionListener="#{usuarioController.pesquisar(usuarioController.usuario.nome)}"
+						             update=":formLista:tblUsuarios, :formLista:mensagens, pesquisa"/>
+				</center>
+			</p:dialog>
 		</h:form>
 	
 		<h:form prependId="false">

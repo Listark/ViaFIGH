@@ -37,6 +37,11 @@ public class UsuarioService {
 	}
 	
 	@Transactional
+	public List<Usuario> buscar(String nome) {
+		return usuarioDAO.buscar(nome);
+	}
+	
+	@Transactional
 	public Perfil buscarPerfil(Long idPerfil) {
 		return usuarioDAO.buscarPerfil(idPerfil);
 	}

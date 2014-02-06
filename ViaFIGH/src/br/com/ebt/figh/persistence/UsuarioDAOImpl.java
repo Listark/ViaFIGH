@@ -123,4 +123,12 @@ public class UsuarioDAOImpl extends CustomHibernateDaoSupport implements Usuario
 
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Usuario> buscar(String nome) {
+		nome = "%" + nome + "%";
+		Object[] parametros = {nome};
+		return hibernateTemplate.find("select usuario from Usuario usuario where usuario.nome like ?", parametros);
+	}
+	
 }

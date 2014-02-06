@@ -19,5 +19,6 @@ public interface UsuarioDAO {
 	public List<Usuario> getUsuariosByFornecedorId(Long idFornecedor);
 	public List<Usuario> getUsuariosTipoCliente();
 	public List<Usuario> getUsuariosTipoFornecedor();
+	public List<Usuario> buscar(String nome);
 	
 }

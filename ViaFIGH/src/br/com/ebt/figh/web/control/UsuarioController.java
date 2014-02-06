@@ -24,6 +24,7 @@ public class UsuarioController {
 	private static final String INSERT_SUCCESS = "Usuário cadastrado com sucesso!";
 	private static final String DELETE_SUCCESS = "Usuário excluído com sucesso!";
 	private static final String EDIT_SUCCESS   = "Usuário alterado com sucesso";
+	private static final String SEARCH_SUCCESS = " usuarios foram encontrados";
 	private Usuario usuario;
 	private List<Usuario> usuarios;
 	private List<Perfil> perfis;
@@ -86,7 +87,12 @@ public class UsuarioController {
 		} else {
 			usuarios.add(usuario);
 			FacesUtil.exibirMensagemSucesso(INSERT_SUCCESS);
+			FacesUtil.executarScript("PF('wNovoCadastro').show()");
 		}
+		
+		usuario = null;
+		idFornecedor = null;
+		idPerfil = null;
 	}
 	
 	public void excluir() {
@@ -95,6 +101,17 @@ public class UsuarioController {
 		
 		FacesUtil.executarScript("PF('wExclusao').hide()");
 		FacesUtil.exibirMensagemSucesso(DELETE_SUCCESS);
+	}
+	
+	public void pesquisar(String nome) {
+		usuarios = servico.buscar(nome);
+		usuario = null;
+		FacesUtil.exibirMensagemSucesso(usuarios.size() + SEARCH_SUCCESS);
+		FacesUtil.executarScript("PF('wPesquisa').hide()");
+	}
+	
+	public void limparPesquisa() {
+		usuarios = servico.buscarTodosUsuarios();
 	}
 	
 	private void avaliarPerfil(Long id) {

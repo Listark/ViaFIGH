@@ -10,7 +10,7 @@ public class MenuMB {
 
 	private static final String cadFornecedorURL   = "/paginas/admin/fornecedor/fornecedor.jsf";
 	private static final String crudUsuarioURL 	   = "/paginas/admin/usuario/usuario.jsf";
-	private static final String crudProjetosURL    = "/paginas/admin/cadProjeto/crudProjeto.jsf";
+	private static final String crudProjetosURL    = "/paginas/admin/projeto/projeto.jsf";
 	private static final String crudCenariosURL    = "/paginas/admin/cenario/lista.jsf";
 	private static final String crudIncidentesURL  = "";
 	private static final String testeURL		   = "/paginas/admin/teste.jsf";

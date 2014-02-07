@@ -78,6 +78,12 @@ public class FornecedorController {
 		estadoId = null;
 		cidadeId = null;
 		cidades = null;
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		FacesUtil.executarScript("PF('wForn').show()");
 	}
 	

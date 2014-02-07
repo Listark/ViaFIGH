@@ -68,8 +68,14 @@ form .texto-width10 {
 </h:head>
 
 <h:body>
-	<p:panel>
-		<div id="cabecalho">
+	<!-- <p:ajaxStatus onstart="PF('statusDialog').show();" oncomplete="PF('statusDialog').hide();"/>
+	<p:dialog modal="true" rezizable="false" widgetVar="statusDialog"
+			  closable="false">
+		<h:graphicImage library="img" name="wait.gif"/>
+	</p:dialog>   -->
+
+	<p:panel style="">
+		<div id="cabecalho">		
 			<ui:insert name="cabecalho">
 				<center>
 					<h:graphicImage url="/resources/img/logo.png"/>
@@ -84,6 +90,17 @@ form .texto-width10 {
 		<div id="rodape">
 			<ui:insert name="rodape" />
 		</div>		
-	</p:panel>	
+	</p:panel>
+	
+	<p:ajaxStatus style="width:64px;height:64px;position:fixed;right:5px;bottom:5px">  
+    	<f:facet name="start">  
+	        <p:graphicImage library="img" name="wait.gif" />  
+	    </f:facet>  
+  
+	    <f:facet name="complete">  
+        	<h:outputText value="" />  
+    	</f:facet>  
+	</p:ajaxStatus>  
+		
 </h:body>
 </html>

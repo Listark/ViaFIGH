@@ -23,17 +23,21 @@
 			
 			<p:dataTable id="tblFornecedores" var="forn" 
 						 value="#{fornecedorController.fornecedores}"
-					     rowKey="#{forn.id}" rows="22"
-					     scrollable="true" scrollHeight="410"
+					     rowKey="#{forn.id}" rows="15"
 					     resizableColumns="true"
-					     paginator="true" paginatorPosition="bottom">
+					     paginator="true" paginatorPosition="bottom"
+					     style="height:480px"
+					     >
 				
 				<f:facet name="header">
 					<h:outputText value="#{msgs.tituloCadastroFornecedor}"/>
 				</f:facet>
 					     
-				<p:column headerText="#{msgs.lbFornecedorCNPJ}">
-					<h:outputText value="#{forn.CNPJ}"/>					
+				<p:column headerText="#{msgs.lbFornecedorCNPJ}"
+					      width="100">
+					<center>
+						<h:outputText value="#{forn.CNPJ}"/>
+					</center>					
 				</p:column>
 				
 				<p:column headerText="#{msgs.lbFornecedorNome}">
@@ -44,7 +48,8 @@
 					<h:outputText value="#{forn.endereco.logradouro.nome}"/>
 				</p:column>
 				
-				<p:column headerText="#{msgs.lbFornecedorNumero}">
+				<p:column headerText="#{msgs.lbFornecedorNumero}"
+						  width="30">
 					<h:outputText value="#{forn.endereco.numero}"/>
 				</p:column>
 				
@@ -52,14 +57,18 @@
 					<h:outputText value="#{forn.endereco.logradouro.cidade.nome}"/>
 				</p:column>
 				
-				<p:column headerText="#{msgs.lbFornecedorUF}">
+				<p:column headerText="#{msgs.lbFornecedorUF}"
+						  width="30">
 					<center>
 						<h:outputText value="#{forn.endereco.logradouro.cidade.estado.sigla}"/>
 					</center>
 				</p:column>
 				
-				<p:column headerText="#{msgs.lbFornecedorCep}">
-					<h:outputText value="#{forn.endereco.logradouro.cep}"/>
+				<p:column headerText="#{msgs.lbFornecedorCep}"
+						  width="60">
+					<center>
+						<h:outputText value="#{forn.endereco.logradouro.cep}"/>
+					</center>
 				</p:column>
 				
 				<p:column headerText="#{msgs.lbFornecedorContato}">
@@ -75,19 +84,21 @@
 				</p:column>
 				
 				<p:column headerText="#{msgs.lbFornecedorEditar}" 
-						  width="5%">
+						  width="30">
 					<center>
 						<p:commandButton icon ="ui-icon-pencil" style="height: 7px; width: 7px"
 										 update=":formCadForn:cadForn"
-										 actionListener="#{fornecedorController.editar(forn)}">
+										 actionListener="#{fornecedorController.editar(forn)}"
+										 global="true">
 						</p:commandButton>
 					</center>
 				</p:column>
 				
-				<p:column headerText="#{msgs.btnFornecedorExcluir}" width="5%" >
+				<p:column headerText="#{msgs.btnFornecedorExcluir}" 
+						  width="35" >
 					<center>
 						<p:commandButton icon="ui-icon-trash" style="height: 7px; width: 7px"
-							onclick="PF('wExclusao').show();">
+							onclick="PF('wExclusao').show();" global="true">
 							<f:setPropertyActionListener target="#{fornecedorController.fornecedor}" value="#{forn}" />							
 						</p:commandButton>
 					</center>
@@ -172,7 +183,8 @@
 					<p:commandButton value="#{msgs.btnFornecedorSalvar}" icon="ui-icon-disk"
 									 actionListener="#{fornecedorController.salvar}"
 									 oncomplete="if(args.validationFailed){PF('wForn').show()}"
-									 update=":formPrincipal:tblFornecedores, :formPrincipal:mensagens, cadForn">
+									 update=":formPrincipal:tblFornecedores, :formPrincipal:mensagens, cadForn"
+									 global="true">
 					</p:commandButton>
 				</center>					
 				
@@ -187,10 +199,12 @@
 							 showEffect="fade" widgetVar="wExclusao">
 				<p:commandButton value="#{msgs.msgsFornecedorConfirmar}" 
 								 actionListener="#{fornecedorController.excluir}"
-								 update=":formPrincipal:tblFornecedores"/>
+								 update=":formPrincipal:tblFornecedores"
+								 global="true"/>
 								 
 				<p:commandButton value="#{msgs.msgsFornecedorCancelar}"
-								 onclick="PF('wExclusao').hide()"/>								 
+								 onclick="PF('wExclusao').hide()"
+								 global="true"/>								 
 			</p:confirmDialog>
 		</h:form>
 		
@@ -201,10 +215,12 @@
 				
 				<p:commandButton value="#{msgs.msgsFornecedorConfirmar}"
 								 onclick="PF('wNovoCadastro').hide()"
-								 oncomplete="PF('wForn').show()"/>
+								 oncomplete="PF('wForn').show()"
+								 global="true"/>
 								 
 				<p:commandButton value="#{msgs.msgsFornecedorCancelar}"
-							     onclick="PF('wNovoCadastro').hide()"/>								 							 
+							     onclick="PF('wNovoCadastro').hide()"
+							     global="true"/>								 							 
 			
 			</p:confirmDialog>		
 		</h:form>
@@ -222,7 +238,8 @@
 				<center>
 					<p:commandButton value="#{msgs.msgsFornecedorPesquisar}"
 						             actionListener="#{fornecedorController.pesquisar(fornecedorController.fornecedor.nome)}"
-						             update=":formPrincipal:tblFornecedores, :formPrincipal:mensagens, pesquisa"/>
+						             update=":formPrincipal:tblFornecedores, :formPrincipal:mensagens, pesquisa"
+						             global="true"/>
 				</center>
 			</p:dialog>
 		</h:form>
@@ -234,30 +251,23 @@
 			<p:menubar>
 				<p:menuitem value="#{msgs.btnFornecedorCadastrar}"
 							actionListener="#{fornecedorController.cadastrar}"
-				       		icon="ui-icon-disk" update=":formCadForn:cadForn">
+				       		icon="ui-icon-disk" update=":formCadForn:cadForn"
+				       		global="true">
 				</p:menuitem>
 				<p:menuitem value="#{msgs.msgsFornecedorPesquisar}"
 							onclick="PF('wPesquisa').show()"
-							icon="ui-icon-search" >
+							icon="ui-icon-search" 
+							global="true">
 				</p:menuitem>
 				<p:menuitem value="#{msgs.msgsFornecedorLimparPesquisa}"
 						    actionListener="#{fornecedorController.limparPesquisa}"
 						    update=":formPrincipal:tblFornecedores, :formCadForn:cadForn"
-						    icon="ui-icon-close">
+						    icon="ui-icon-close"
+						    global="true">
 				</p:menuitem>
 			</p:menubar>
 		</h:form>
 	</ui:define>
 </ui:composition> 
-
-<p:ajaxStatus style="width:60px;height:60px;">
-		<f:facet name="start">  
-	        <h:graphicImage value="/resources/wait.gif" />  
-	    </f:facet>  
-      
-    	<f:facet name="complete">  
-	        <h:outputText value="" />  
-	    </f:facet>  
-</p:ajaxStatus>
 
 </html>
